@@ -8,7 +8,6 @@ import { PaisService } from '../../services/pais.service';
   styleUrls: ['./por-capital.component.css']
 })
 export class PorCapitalComponent implements OnInit {
-
   termino : string = '';
   hayError: boolean = false;
   paises  : Country[] = [];

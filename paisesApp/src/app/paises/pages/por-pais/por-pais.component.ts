@@ -9,25 +9,52 @@ import { Country } from './../../interfaces/pais.interface';
 })
 export class PorPaisComponent implements OnInit {
 
-  public paises: Country[] = [];
-  public termino: string ='hola mundo';
-  public error: boolean = false;
-  constructor( private paisService: PaisService) { }
+ 
+  termino : string = '';
+  hayError: boolean = false;
+  paises  : Country[] = [];
+  
+  paisesSugeridos   : Country[] = [];
+  mostrarSugerencias: boolean = false;
 
-  public buscar( termino: string){
-    this.error = false;
-    this.termino = termino;
-    this.paisService.buscarPais(this.termino)
-    .subscribe( (res)  => {
-      this.paises = res 
-    }), (err) => {
-      this.error = true;
-      this.paises = []; 
-    }
+  constructor( private paisService: PaisService ) { }
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+
+  buscar( termino: string ) {
+    
+    this.mostrarSugerencias = false;
+    this.hayError = false;
+    this.termino  = termino;
+
+    this.paisService.buscarPais( termino )
+      .subscribe( (paises) => {
+        console.log(paises);
+        this.paises = paises;
+        
+      }, (err) => {
+        this.hayError = true;
+        this.paises   = [];
+      });
 
   }
 
-  ngOnInit(): void {
+  sugerencias( termino: string ) {
+    this.hayError = false;
+    this.termino = termino;
+    this.mostrarSugerencias = true;
+    
+    this.paisService.buscarPais( termino )
+      .subscribe( 
+        paises => this.paisesSugeridos = paises.splice(0,5),
+        (err) => this.paisesSugeridos = []
+      );
+
+  }
+
+  buscarSugerido( termino: string ) {
+    this.buscar( termino );
   }
 
 }
